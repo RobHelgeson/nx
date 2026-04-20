@@ -123,7 +123,18 @@ module.exports = withNx({
       });
     }
 
-    return entries;
+    return {
+      // beforeFiles runs before Next.js checks public/ — needed so this rewrite
+      // wins over the generated public/robots.txt (gitignored, built from Framer).
+      beforeFiles: [
+        {
+          source: '/robots.txt',
+          destination: `${astroDocsUrl}/docs/robots.txt`,
+        },
+      ],
+      afterFiles: entries,
+      fallback: [],
+    };
   },
   // Transpile nx-dev packages
   transpilePackages: [
